@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kubernetes-hello-world-vYAML
+  labels:
+    app: kubernetes-hello-world-vYAML
+spec:
+  replicas: 6
+  selector:
+    matchLabels:
+      app: kubernetes-hello-world-vYAML
+  template:
+    metadata:
+      labels:
+        app: kubernetes-hello-world-vYAML
+    spec:
+      containers:
+      - name: kubernetes-hello-world-vYAML
+        image: hello_world_docker
+        ports:
+        - containerPort: 80
+    

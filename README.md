@@ -14,12 +14,12 @@ Référence : Remerciement à Sergeï Kudinov pour ses cours et ses exercices pr
 
 Avant de commencer, il est necessaire d'installer docker sur votre système : [Docker Desktop](https://www.docker.com/get-started)
 
-Afin de vous assurer que l'installation est correct, vous pouvez executer la commande suivante :
+Afin de s'assurer que votre installation est correct, vous pouvez executer la commande suivante :
 ```
 docker run hello-world
 ```
 
-Le message suivant s'affichera afin de confirmer la bonne installation
+Si votre installation est correcte, le message suivant s'affichera :
 
 ```
 Unable to find image 'hello-world:latest' locally
@@ -34,7 +34,7 @@ This message shows that your installation appears to be working correctly.
 
 ### 1.1 Création d'une image docker à partir d'un dockerfile
 
-En utilisant un terminal positionnez vous dans le dossier [hello-world-docker](./hello-world-docker) téléchargeable à partir de ce répositorie.
+En utilisant un terminal positionnez vous dans le dossier [hello-world-docker](./hello-world-docker) téléchargeable à partir de ce répertoire.
 
 Le fichier [DockerFile](./hello-world-docker/Dockerfile) référence les informations necessaires à docker afin de construire l'image. Dans notre cas le fichier copie les documents `server.js` et `package.json` dans notre image afin de pouvoir lancer notre site web node js.
 
@@ -44,14 +44,14 @@ Utilisez la commande ci-dessous afin de créer l'image docker basé sur nos fich
 docker build -t hello-world-docker .
 ```
 
-> Notez que l'attribut suivant `-t` correspond au nom de notre image. De plus `.` correspond à l'emplacement de notre fichier docker. Dans notre cas à la racine.
+> Notez que l'attribut suivant `-t` correspond au nom de notre image. De plus `.` correspond à l'emplacement de notre fichier docker. Dans notre cas ce fichier est situé à la racine du dossier.
 
 ### 1.2 D'une image à un conteneur. Le lancement de notre site web
 
-Notre Dockerfile se base sur l'image node permettant de monter un site web à partir de nos autres fichiers. Une fois que nous avons créé l'image il ne reste plus qu'a la lancer. Pour ce faire nous allons utiliser la commande suivante :
-`docker run -p 12345:8080 -d hello-world-docker`
+Notre Dockerfile se base sur l'image node permettant de monter un site web à partir de nos autres fichiers. Une fois que nous avons créé l'image il ne reste plus qu'a la démarrer. Pour ce faire nous allons utiliser la commande suivante :
+```docker run -p 12345:8080 -d hello-world-docker```
 
-Grâce à cette commande nous allons exectuter en backgroud (grâce à l'option `-d`) l'image hello-world-docker dans un conteneur. Notre site web initialement disponible sur le port 8080 (interne au conteneur) sera disponible sur le port 12345.
+Grâce à cette commande nous allons exectuter en backgroud (grâce à l'option `-d`) l'image hello-world-docker dans un conteneur. Notre site web initialement disponible sur le port 8080 (interne au conteneur) sera disponible sur notre machine avec le port 12345.
 
 Votre site doit être disponible sur l'url suivante [http://localhost:12345](http://localhost:12345)
 
@@ -59,9 +59,9 @@ Si ce n'est pas le cas, le conteneur doit être en cours de lancement. Vous pouv
 
 ## 2. Minikube
 
-Afin d'utiliser le gestionnaire de conteneur Kubernetes, nous allons installer Minikube. Il interagit comme une VM supportant le cluster Kubernetes. [lien d'installation](https://minikube.sigs.k8s.io/docs/start/)
+Afin d'utiliser le gestionnaire de conteneur Kubernetes, nous allons installer Minikube. Il interagit comme une VM supportant le cluster Kubernetes. [Lien d'installation](https://minikube.sigs.k8s.io/docs/start/)
 
-Voici quelques commandes interressantes afin de vous assurer que votre système est fonctionnelle
+Voici quelques commandes interressantes afin de vous assurer que votre système est fonctionnel
 ```
 minikube start       # Permet de démarrer la VM hebergeant kubernetes
 minikube status      # Permet de verifier le status de la machine
@@ -72,11 +72,11 @@ minikube ip          # Permet de connaitre l'IP de notre VM Minikube
 
 Kubernetes est représenté en ligne de commande par `kubectl`.
 
-Dans un premier temps nous allons voir les commandes initiales afin d'utiliser kubernetes. Dans un second temps nous verrons l'utilisation de kubernetes à partir de fichier yaml permettant d'industrialiser un déploiement global.
+Dans un premier temps nous allons voir les commandes initiales afin d'utiliser kubernetes. Dans un second temps nous verrons l'utilisation de kubernetes à partir de fichier yaml permettant d'industrialiser un déploiement.
 
 ### 3.1 Création d'un deploiement à partir d'une image docker
 
-Nous allons en 2 temps mettre en place notre service web préalablement dockeriser dans la partie 1.
+Nous allons mettre en place notre service web préalablement dockeriser dans la partie 1.
 
 **Création d'un deploiment**
 ```
@@ -87,13 +87,13 @@ kubectl create deployment kubernetes-hello-world --image=hello-world-docker
 Il sera interresant de gérer les differentes objects de kubernetes. Quelques commandes sont très interressante et nous permettrons de mettre en place et verifier nos systèmes.
 
 ```
- # Cette commande est souvent utilisé. Elle permet notament de voir l'état de nos objects.
 
-kubectl get <pods/services ...> 
 
-#Permet d'ouvrir un shel d'un pod afin d'y executer des lignes de commandes.
+kubectl get <pods/services ...>      # Cette commande est souvent utilisé. Elle permet notament de voir l'état de nos objects.
 
-kubectl exec -ti $POD_NAME bash
+
+
+kubectl exec -ti $POD_NAME bash     #Permet d'ouvrir un shel d'un pod afin d'y executer des lignes de commandes.
 ```
 
 ### 3.2 Exposer notre service
@@ -108,7 +108,7 @@ kubectl expose deployments/$DEPLOYMENT_NAME --type="NodePort" --port $PORT_NUMBE
 > Ici $DEPLOYMENT_NAME doit être remplacer par notre nom de deploiement : 'kubernetes-hello-world'
 > $PORT_NUMBER est notre port de diffusion côté pod soit 8080
 
-A présent notre site web dockeuriser est disponible. l'adresse IP est celle de notre [VM minikube](`##2 . Minikube`). le port est celui qui a été attribué par Kubernetes pour ce service, on le retrouve grâce à cette commande `kubectl get services`
+A présent notre site web dockeuriser est disponible. l'adresse IP est celle de notre [VM minikube](`#2-minikube`). le port est celui qui a été attribué par Kubernetes pour ce service, on le retrouve grâce à cette commande `kubectl get services`
 
 
 ### 3.3 Deployment à partir d'un fichier manifest yaml
@@ -121,8 +121,13 @@ kubectl delete deployment $DEPLOYMENT_NAME
 
 Vous retrouverez 2 fichiers dans le dossier kubernetes : `deployment.yaml` et `service.yaml`
 
-Les commandes sont les suivantes :
+Les commandes d'execution sont les suivantes :
 ```
 kubectl apply -f service.yaml
 kubectl apply -f deployment.yaml
 ```
+> **Petit test :** quels sont les noms de ces deploiement et services ? Modifiez leur nom afin de mieux comprendre à quoi les servent les diffentents tag.
+
+> De même pour les étapes précèdentes, amusez vous à modifier les ports, les differents tag afin de mieux comprendre les fonctions de chacun.
+> Il sera interressant également d'arrêter certains élèments afin de prendre conscience de l'utilité des commandes
+
